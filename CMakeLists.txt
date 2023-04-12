@@ -12,6 +12,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(hawk_SRC
   src/main.cpp
+  src/material.cpp
+  src/hittable.cpp
+  src/vec3.cpp
 )
 
 project(hawk)

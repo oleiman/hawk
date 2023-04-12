@@ -5,19 +5,6 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
-#include <random>
-
-inline double random_double() {
-  static std::uniform_real_distribution<double> distribution(0.0, 1.0);
-  static std::mt19937 generator;
-  return distribution(generator);
-  // return rand() / (RAND_MAX + 1.0);
-}
-
-inline double random_double(double min, double max) {
-  // Returns a random real in [min,max).
-  return min + (max - min) * random_double();
-}
 
 class vec3 {
 public:
@@ -60,14 +47,16 @@ public:
     return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
   }
 
-  inline static vec3 random() {
-    return vec3(random_double(), random_double(), random_double());
+  bool near_zero() const {
+    // Return true if the vector is close to zero in all dimensions
+    const auto s = 1e-8;
+    return (std::fabs(e[0]) < s) && //
+           (std::fabs(e[1]) < s) && //
+           (std::fabs(e[2]) < s);
   }
 
-  inline static vec3 random(double min, double max) {
-    return vec3(random_double(min, max), random_double(min, max),
-                random_double(min, max));
-  }
+  static vec3 random();
+  static vec3 random(double min, double max);
 
 private:
   std::array<double, 3> e;
@@ -127,7 +116,7 @@ inline vec3 random_unit_vector() {
   return unit_vector(random_in_unit_sphere());
 }
 
-vec3 random_in_hemisphere(const vec3 &normal) {
+inline vec3 random_in_hemisphere(const vec3 &normal) {
   vec3 in_unit_sphere = random_in_unit_sphere();
   if (dot(in_unit_sphere, normal) >
       0.0) { // In the same hemisphere as the normal
@@ -135,4 +124,8 @@ vec3 random_in_hemisphere(const vec3 &normal) {
   } else {
     return -in_unit_sphere;
   }
+}
+
+inline vec3 reflect(const vec3 &v, const vec3 &n) {
+  return v - (2 * dot(v, n) * n);
 }
