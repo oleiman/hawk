@@ -41,6 +41,7 @@ int main() {
 
   // World
 
+  // auto R = cos(pi / 4);
   hittable_list world;
 
   auto material_ground = std::make_shared<lambertian>(color(0.8, 0.8, 0.0));
@@ -58,13 +59,20 @@ int main() {
   // negative radius gives inward-facing normal. The combination of the two
   // gives a hollow glass sphere
   world.add(
-      std::make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.4, material_left));
+      std::make_shared<sphere>(point3(-1.0, 0.0, -1.0), -0.45, material_left));
   world.add(
       std::make_shared<sphere>(point3(1.0, 0.0, -1.0), 0.5, material_right));
 
+  // auto material_left = std::make_shared<lambertian>(color(0, 0, 1));
+  // auto material_right = std::make_shared<lambertian>(color(1, 0, 0));
+
+  // world.add(std::make_shared<sphere>(point3(-R, 0, -1), R, material_left));
+  // world.add(std::make_shared<sphere>(point3(R, 0, -1), R, material_right));
+
   // Camera
 
-  camera cam;
+  camera cam(point3(-2, 2, 1), point3(0, 0, -1), vec3(0, 1, 0), 20,
+             aspect_ratio);
 
   // Render
 
