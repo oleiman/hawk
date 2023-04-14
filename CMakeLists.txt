@@ -12,8 +12,9 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
 set(hawk_SRC
   src/main.cpp
-  src/material.cpp
+  src/bvh.cpp
   src/hittable.cpp
+  src/material.cpp
   src/vec3.cpp
 )
 
