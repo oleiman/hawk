@@ -15,6 +15,7 @@ set(hawk_SRC
   src/bvh.cpp
   src/hittable.cpp
   src/material.cpp
+  src/texture.cpp
   src/vec3.cpp
 )
 
@@ -23,5 +24,7 @@ project(hawk)
 add_executable(hawk
   ${hawk_SRC}
 )
+
+target_include_directories(hawk PUBLIC external)
 
 set_property(TARGET hawk PROPERTY CXX_STANDARD 20)
