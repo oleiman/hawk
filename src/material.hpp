@@ -2,6 +2,8 @@
 
 #include "hawk.h"
 
+#include "texture.hpp"
+
 struct hit_record;
 
 class material {
@@ -13,14 +15,15 @@ public:
 
 class lambertian : public material {
 public:
-  lambertian(const color &a) : albedo(a) {}
+  lambertian(const color &a) : albedo(std::make_shared<solid_color>(a)) {}
+  lambertian(std::shared_ptr<texture> a) : albedo(a) {}
   virtual ~lambertian() = default;
 
   virtual bool scatter(const ray &r_in, const hit_record &rec,
                        color &attenuation, ray &scattered) const override;
 
 private:
-  color albedo;
+  std::shared_ptr<texture> albedo;
 };
 
 class metal : public material {

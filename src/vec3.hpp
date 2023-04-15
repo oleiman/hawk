@@ -91,6 +91,10 @@ inline vec3 operator*(const vec3 &v, double t) { return t * v; }
 
 inline vec3 operator/(vec3 v, double t) { return (1 / t) * v; }
 
+inline bool operator==(const vec3 &lhs, const vec3 &rhs) {
+  return lhs[0] == rhs[0] && lhs[1] == rhs[1] && lhs[2] == rhs[2];
+}
+
 inline double dot(const vec3 &u, const vec3 &v) {
   return (u[0] * v[0]) + (u[1] * v[1]) + (u[2] * v[2]);
 }

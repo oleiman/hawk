@@ -73,6 +73,11 @@ bool sphere::hit(const ray &r, double t_min, double t_max,
 
   vec3 outward_normal = (rec.p - center) / radius;
   rec.set_face_normal(r, outward_normal);
+
+  // treating the unit normal vector as though it were a point on a unit sphere
+  // centered at the origin allows us to calculate the spherical coordinates of
+  // that point and use those to index into a texture.
+  sphere::get_sphere_uv(outward_normal, rec.u, rec.v);
   rec.mat_ptr = mat_ptr;
 
   return true;
