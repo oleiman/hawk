@@ -78,3 +78,15 @@ public:
 public:
   std::shared_ptr<texture> emit;
 };
+
+class isotropic : public material {
+public:
+  isotropic(color c) : albedo(std::make_shared<solid_color>(c)) {}
+  isotropic(std::shared_ptr<texture> a) : albedo(a) {}
+
+  virtual bool scatter(const ray &r_in, const hit_record &rec,
+                       color &attenuation, ray &scattered) const override;
+
+private:
+  std::shared_ptr<texture> albedo;
+};

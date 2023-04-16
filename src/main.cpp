@@ -5,6 +5,7 @@
 #include "bvh.hpp"
 #include "camera.hpp"
 #include "color.hpp"
+#include "constant_medium.hpp"
 #include "hittable_list.hpp"
 #include "material.hpp"
 #include "moving_sphere.hpp"
@@ -175,13 +176,43 @@ hittable_list cornell_box() {
   return objects;
 }
 
+hittable_list cornell_smoke() {
+  hittable_list objects;
+
+  auto red = std::make_shared<lambertian>(color(0.65, 0.05, 0.05));
+  auto white = std::make_shared<lambertian>(color(0.73, 0.73, 0.73));
+  auto green = std::make_shared<lambertian>(color(0.12, 0.45, 0.15));
+  auto light = std::make_shared<diffuse_light>(color(7, 7, 7));
+
+  objects.add(std::make_shared<yz_rect>(0, 555, 0, 555, 555, green));
+  objects.add(std::make_shared<yz_rect>(0, 555, 0, 555, 0, red));
+  objects.add(std::make_shared<xz_rect>(113, 443, 127, 432, 554, light));
+  objects.add(std::make_shared<xz_rect>(0, 555, 0, 555, 0, white));
+  objects.add(std::make_shared<xz_rect>(0, 555, 0, 555, 555, white));
+  objects.add(std::make_shared<xy_rect>(0, 555, 0, 555, 555, white));
+
+  std::shared_ptr<hittable> box1 =
+      std::make_shared<box>(point3(0, 0, 0), point3(165, 330, 165), white);
+  box1 = std::make_shared<rotate_y>(box1, 15);
+  box1 = std::make_shared<translate>(box1, vec3(265, 0, 295));
+
+  std::shared_ptr<hittable> box2 =
+      std::make_shared<box>(point3(0, 0, 0), point3(165, 165, 165), white);
+  box2 = std::make_shared<rotate_y>(box2, -18);
+  box2 = std::make_shared<translate>(box2, vec3(130, 0, 65));
+
+  objects.add(std::make_shared<constant_medium>(box1, 0.01, color(0, 0, 0)));
+  objects.add(std::make_shared<constant_medium>(box2, 0.01, color(1, 1, 1)));
+
+  return objects;
+}
+
 int main() {
 
   // Image
 
   auto aspect_ratio = 16.0 / 9.0;
   int image_width = 400;
-  int image_height = static_cast<int>(image_width / aspect_ratio);
   int samples_per_pixel = 400;
   constexpr int max_depth = 50;
 
@@ -231,19 +262,28 @@ int main() {
     lookat = point3(0, 2, 0);
     vfov = 20.0;
     break;
-  default:
   case 6:
     objects = cornell_box();
     aspect_ratio = 1.0;
     image_width = 600;
-    image_height = static_cast<int>(image_width / aspect_ratio);
     samples_per_pixel = 200;
-    background = color(0, 0, 0);
+    lookfrom = point3(278, 278, -800);
+    lookat = point3(278, 278, 0);
+    vfov = 40.0;
+    break;
+  default:
+  case 7:
+    objects = cornell_smoke();
+    aspect_ratio = 1.0;
+    image_width = 600;
+    samples_per_pixel = 200;
     lookfrom = point3(278, 278, -800);
     lookat = point3(278, 278, 0);
     vfov = 40.0;
     break;
   }
+
+  int image_height = static_cast<int>(image_width / aspect_ratio);
 
   bvh_node world(objects, 0.0, 1.0);
   // auto world = objects;
