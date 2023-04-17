@@ -358,7 +358,7 @@ int main() {
     objects = final_scene();
     aspect_ratio = 1.0;
     image_width = 800;
-    samples_per_pixel = 10000;
+    samples_per_pixel = 1000;
     lookfrom = point3(478, 278, -600);
     lookat = point3(278, 278, 0);
     vfov = 40.0;
